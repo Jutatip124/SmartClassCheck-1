@@ -27,16 +27,33 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadData() async {
-    setState(() => _isLoading = true);
+  setState(() => _isLoading = true);
+
+  try {
     final db = DatabaseService();
+
+    print("Loading active session...");
     final active = await db.getActiveSession();
+
+    print("Loading all sessions...");
     final all = await db.getAllSessions();
+
+    print("Loaded!");
+
     setState(() {
       _activeSession = active;
       _recentSessions = all.take(3).toList();
       _isLoading = false;
     });
+
+  } catch (e) {
+    print("LOAD DATA ERROR: $e");
+
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {
