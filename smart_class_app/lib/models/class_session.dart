@@ -62,29 +62,49 @@ class ClassSession {
   }
 
   factory ClassSession.fromMap(Map<String, dynamic> map) {
-    return ClassSession(
-      id: map['id']?.toString(),
-      sessionId: map['session_id'] ?? '',
-      studentId: map['student_id'] ?? '',
-      checkinTimestamp: map['checkin_timestamp'] != null
-          ? DateTime.parse(map['checkin_timestamp'])
-          : null,
-      checkinLat: map['checkin_lat'],
-      checkinLng: map['checkin_lng'],
-      qrCodeValue: map['qr_code_value'],
-      prevTopic: map['prev_topic'],
-      expectedTopic: map['expected_topic'],
-      moodScore: map['mood_score'],
-      checkoutTimestamp: map['checkout_timestamp'] != null
-          ? DateTime.parse(map['checkout_timestamp'])
-          : null,
-      checkoutLat: map['checkout_lat'],
-      checkoutLng: map['checkout_lng'],
-      learnedToday: map['learned_today'],
-      classFeedback: map['class_feedback'],
-      status: map['status'] ?? 'pending',
-    );
+  double? toDouble(dynamic v) {
+    if (v == null) return null;
+    if (v is double) return v;
+    if (v is int) return v.toDouble();
+    return double.tryParse(v.toString());
   }
+
+  int? toInt(dynamic v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    return int.tryParse(v.toString());
+  }
+
+  return ClassSession(
+    id: map['id']?.toString(),
+    sessionId: map['session_id'] ?? '',
+    studentId: map['student_id'] ?? '',
+
+    checkinTimestamp: map['checkin_timestamp'] != null
+        ? DateTime.tryParse(map['checkin_timestamp'].toString())
+        : null,
+
+    checkinLat: toDouble(map['checkin_lat']),
+    checkinLng: toDouble(map['checkin_lng']),
+
+    qrCodeValue: map['qr_code_value'],
+    prevTopic: map['prev_topic'],
+    expectedTopic: map['expected_topic'],
+
+    moodScore: toInt(map['mood_score']),
+
+    checkoutTimestamp: map['checkout_timestamp'] != null
+        ? DateTime.tryParse(map['checkout_timestamp'].toString())
+        : null,
+
+    checkoutLat: toDouble(map['checkout_lat']),
+    checkoutLng: toDouble(map['checkout_lng']),
+
+    learnedToday: map['learned_today'],
+    classFeedback: map['class_feedback'],
+    status: map['status'] ?? 'pending',
+  );
+}
 
   ClassSession copyWith({
     String? id,
